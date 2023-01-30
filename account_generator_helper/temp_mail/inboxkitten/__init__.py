@@ -19,7 +19,7 @@ class InboxKitten(Mail):
         :return: Email address.
         :rtype: str
         """
-        return super()._set_email(email) + '@inboxkitten.com'
+        return f'{super()._set_email(email)}@inboxkitten.com'
 
     def get_inbox(self):
         if not self._email:

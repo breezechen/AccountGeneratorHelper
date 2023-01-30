@@ -33,7 +33,9 @@ class Proxies:
             if not r.ok:
                 continue
             proxies = r.text.split()
-            self.__logger.debug('{} parsed {} {} proxy'.format(url.split('/api/')[0].split('/v')[0], len(proxies), proxy_type.name))
+            self.__logger.debug(
+                f"{url.split('/api/')[0].split('/v')[0]} parsed {len(proxies)} {proxy_type.name} proxy"
+            )
             for row in proxies:
                 with self.__lock:
                     self.__proxies.add(Proxy(proxy_type, *row.split(':'), None))
@@ -42,7 +44,7 @@ class Proxies:
         for proxy_type, url in zip([ProxyType.HTTP, ProxyType.HTTPS, ProxyType.SOCKS4], ['https://free-proxy-list.net', 'https://www.sslproxies.org', 'https://www.socks-proxy.net']):
             resp = requests.get(url)
             proxies = self._re_proxy(resp.text)
-            self.__logger.debug('{} parsed {} proxy'.format(url, len(proxies)))
+            self.__logger.debug(f'{url} parsed {len(proxies)} proxy')
             for row in proxies:
                 address, port, country = row
                 try:
@@ -73,7 +75,9 @@ class Proxies:
                     self.__proxies.add(Proxy(getattr(ProxyType, proxy_type.text.split(',')[0].upper()),
                                                 address.text, port.text, country))
 
-            self.__logger.debug('https://hidemy.name page {} parsed {} proxy'.format(i+1, len(proxies_rows)))
+            self.__logger.debug(
+                f'https://hidemy.name page {i + 1} parsed {len(proxies_rows)} proxy'
+            )
             if page.find('div', {'class': 'pagination'}).find_all('a')[-1].text.isdigit():
                 break
             if max_page and max_page == i:
@@ -85,7 +89,7 @@ class Proxies:
         if not r.ok:
             return
         data = r.json().get('data', [])
-        self.__logger.debug('https://geonode.com parsed {} proxy'.format(len(data)))
+        self.__logger.debug(f'https://geonode.com parsed {len(data)} proxy')
         for row in data:
             try:
                 country = Counties(row['country'])
@@ -121,7 +125,9 @@ class Proxies:
                                                  base64.b64decode(port['data-port']).decode(), country))
                     except AttributeError:
                         pass
-            self.__logger.debug('https://advanced.name page {} parsed {} proxy'.format(i + 1, len(proxies_rows)))
+            self.__logger.debug(
+                f'https://advanced.name page {i + 1} parsed {len(proxies_rows)} proxy'
+            )
             if page.find('ul', {'class': 'pagination pagination-lg'}).find_all('a')[-2].text == str(i):
                 break
             if max_page and max_page == i:
@@ -189,7 +195,7 @@ class Proxies:
         threads = [Thread(target=parser, args=(max_page, ), daemon=True) for parser in parsers]
         [thread.start() for thread in threads]
         [thread.join() for thread in threads]
-        self.__logger.debug('Success parsed {} proxy'.format(len(self.__proxies)))
+        self.__logger.debug(f'Success parsed {len(self.__proxies)} proxy')
 
     def test_proxies(self, workers_count=100):
         """
@@ -204,7 +210,9 @@ class Proxies:
         [thread.start() for thread in threads]
         [thread.join() for thread in threads]
         self.__proxies = good_proxies
-        self.__logger.debug('Success tested proxy, count of valid proxy {}'.format(len(self.__proxies)))
+        self.__logger.debug(
+            f'Success tested proxy, count of valid proxy {len(self.__proxies)}'
+        )
 
     def pop(self) -> Proxy:
         """
