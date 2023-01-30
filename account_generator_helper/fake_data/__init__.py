@@ -49,8 +49,11 @@ class Person:
         if r.status_code != 200:
             raise ProblemWithGetPersonData()
 
-        [setattr(self, '_' + camel_to_snake(key), r.json()[0][key]) for key in r.json()[0] if
-         self.__getattr('_' + camel_to_snake(key))]
+        [
+            setattr(self, f'_{camel_to_snake(key)}', r.json()[0][key])
+            for key in r.json()[0]
+            if self.__getattr(f'_{camel_to_snake(key)}')
+        ]
 
     def __getattr(self, key):
         try:
@@ -60,6 +63,6 @@ class Person:
             return False
 
     def __repr__(self):
-        return '<Person {}>'.format(' '.join(['{}={}'.format(key[1:], value) for key, value in zip(vars(self).keys(), vars(self).values())]))
+        return f"<Person {' '.join([f'{key[1:]}={value}' for key, value in zip(vars(self).keys(), vars(self).values())])}>"
 
 

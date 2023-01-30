@@ -24,7 +24,7 @@ class TempMailPlus(Mail):
 
         if not domain:
             domain = TempMailPlusDomains[random.choice(TempMailPlusDomains._member_names_)]
-        return super()._set_email(email + '@' + domain.value)
+        return super()._set_email(f'{email}@{domain.value}')
 
     def get_inbox(self):
         if not self._email:

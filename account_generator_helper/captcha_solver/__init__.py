@@ -17,8 +17,7 @@ class CaptchaSolver:
 
     @staticmethod
     def __get_captcha_result(text):
-        result = re.findall(f'TextResult":.*"(.*)"', text)
-        if result:
+        if result := re.findall('TextResult":.*"(.*)"', text):
             return result[0].replace('\\n', '')
         return ''
 

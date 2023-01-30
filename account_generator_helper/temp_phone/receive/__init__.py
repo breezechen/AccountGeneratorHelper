@@ -16,7 +16,7 @@ class Receive:
         if proxy:
             self._s.proxies.update({'http': proxy, 'https': proxy})
         self._s.headers.update(headers)
-        self._countries = dict()
+        self._countries = {}
 
     def get_counties(self) -> List[Country]:
         """
@@ -42,4 +42,4 @@ class Receive:
         return random.choice(self.get_counties())
 
     def __repr__(self):
-        return '<Receive country_count={}>'.format(len(self._countries))
+        return f'<Receive country_count={len(self._countries)}>'

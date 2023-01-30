@@ -10,7 +10,7 @@ except ImportError:
     from html.parser import HTMLParser
     unescape = HTMLParser().unescape
 
-LETTERS = string.ascii_letters + '1234567890'
+LETTERS = f'{string.ascii_letters}1234567890'
 
 
 def random_string():
